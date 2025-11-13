@@ -1,0 +1,222 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>UAE Heritage Explorer</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+body {
+  font-family: 'Segoe UI', sans-serif;
+  background: #f2e6d0;
+  margin: 0;
+  display: flex;
+  justify-content: center;
+}
+.container {
+  max-width: 900px;
+  width: 100%;
+  padding: 20px;
+}
+h1 {
+  text-align: center;
+  color: #4b3d2a;
+  margin-bottom: 10px;
+}
+.flag {
+  text-align: center;
+  font-size: 2rem;
+  margin-bottom: 20px;
+}
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: 16px;
+}
+.symbol-btn {
+  background: #fff5e4;
+  border: 2px solid #c8b38a;
+  border-radius: 16px;
+  padding: 20px;
+  text-align: center;
+  font-size: 2rem;
+  cursor: pointer;
+  transition: 0.2s;
+}
+.symbol-btn:hover {
+  background: #f7e8c7;
+  transform: scale(1.05);
+}
+#interaction, #result {
+  display: none;
+  background: #fffaf0;
+  padding: 20px;
+  border-radius: 18px;
+  border: 2px solid #c8b38a;
+  margin-top: 20px;
+}
+label { font-weight: 600; }
+input {
+  width: 100%;
+  padding: 10px;
+  border-radius: 10px;
+  border: 1px solid #bfa886;
+  margin-top: 6px;
+  margin-bottom: 16px;
+}
+button {
+  width: 100%;
+  padding: 12px;
+  border-radius: 12px;
+  border: none;
+  background: #a67c43;
+  color: white;
+  font-size: 1rem;
+  cursor: pointer;
+}
+button:hover { background: #8c6a39; }
+.back-btn {
+  margin-top: 20px;
+  background: #4b3d2a;
+}
+</style>
+</head>
+<body>
+<div class="container">
+  <h1>UAE Heritage Explorer</h1>
+  <div class="flag">🇦🇪 🇦🇪 🇦🇪</div>
+
+  <div id="home">
+    <h3>Select a heritage symbol:</h3>
+    <div class="grid">
+      <div class="symbol-btn" onclick="selectSymbol('falcon')">🦅<br>Falcon</div>
+      <div class="symbol-btn" onclick="selectSymbol('camel')">🐪<br>Camel</div>
+      <div class="symbol-btn" onclick="selectSymbol('horse')">🐎<br>Horse</div>
+      <div class="symbol-btn" onclick="selectSymbol('dhow')">⛵<br>Dhow</div>
+      <div class="symbol-btn" onclick="selectSymbol('pearls')">💎<br>Pearls</div>
+      <div class="symbol-btn" onclick="selectSymbol('ghaf')">🌳<br>Ghaf Tree</div>
+      <div class="symbol-btn" onclick="selectSymbol('fishing')">🎣<br>Fishing</div>
+      <div class="symbol-btn" onclick="selectSymbol('tent')">🎪<br>Khaima</div>
+      <div class="symbol-btn" onclick="selectSymbol('yowla')">⚔️<br>Yowla</div>
+      <div class="symbol-btn" onclick="selectSymbol('falconhunt')">🏹🦅<br>Falcon Hunting</div>
+    </div>
+  </div>
+
+  <div id="interaction">
+    <h2 id="symbolTitle"></h2>
+    <label>Write one word describing how this symbol makes you feel:</label>
+    <input id="wordInput" placeholder="e.g., proud, strong, peaceful">
+
+    <label>Now enter one emoji that matches your feeling:</label>
+    <input id="emojiInput" placeholder="e.g., 💪 🔥 ⭐ 🇴🇦">
+
+    <button onclick="showResult()">Next</button>
+  </div>
+
+  <div id="result">
+    <h2 id="resultTitle"></h2>
+    <p id="definition"></p>
+    <p id="connection"></p>
+    <button class="back-btn" onclick="goHome()">Back to Home</button>
+  </div>
+</div>
+
+<script>
+let current = "";
+
+const data = {
+  falcon: {
+    title: "🦅 Falcon",
+    definition:
+      "The falcon represents courage, precision, and deep Bedouin heritage. It symbolizes mastery, pride, and the powerful bond between Emiratis and the desert. Falcons were trusted partners in hunting and survival.",
+    connection:
+      "During UAE National Day, the falcon stands as a symbol of leadership and strength. It represents the unwavering determination that united the seven emirates and continues to define the UAE’s identity."
+  },
+  camel: {
+    title: "🐪 Camel",
+    definition:
+      "The camel was the backbone of life in the desert, offering transport, nourishment, and companionship. It symbolizes resilience, loyalty, and the ability to thrive in harsh environments. Camels reflect patience and survival instincts.",
+    connection:
+      "On National Day, camels remind us of the UAE's humble roots and the perseverance of its people. They symbolize how endurance and strength shaped the nation’s journey toward unity and progress."
+  },
+  horse: {
+    title: "🐎 Arabian Horse",
+    definition:
+      "Arabian horses are celebrated for their elegance, power, and intelligence. They symbolize nobility, courage, and victory in Emirati culture. Historically, they were vital for travel, defense, and leadership.",
+    connection:
+      "On National Day, the Arabian horse represents excellence and ambition. Its grace and strength mirror the UAE’s rise as a proud, confident, and forward‑moving nation."
+  },
+  dhow: {
+    title: "⛵ Dhow",
+    definition:
+      "The dhow carried pearl divers, traders, and fishermen across the Gulf. It symbolizes bravery, exploration, and hard work. Its handcrafted wooden design reflects deep maritime tradition.",
+    connection:
+      "During National Day, the dhow honors the UAE’s maritime roots and the determination of early communities who worked at sea to build a future for generations to come."
+  },
+  pearls: {
+    title: "💎 Pearls",
+    definition:
+      "Pearl diving was a challenging and dangerous profession requiring teamwork and bravery. Pearls represent purity, sacrifice, and the economic foundation of the region before oil. They are a symbol of resilience and hope.",
+    connection:
+      "National Day celebrations honor pearl divers as heroes of the past. Their courage and unity symbolize the spirit that led to the formation of the modern UAE."
+  },
+  ghaf: {
+    title: "🌳 Ghaf Tree",
+    definition:
+      "The Ghaf tree thrives in extreme desert conditions and provides shade, shelter, and a gathering place. It symbolizes peace, stability, and unity. Its deep roots reflect strong cultural identity.",
+    connection:
+      "On National Day, the Ghaf tree represents the UAE’s strong foundation and the unity that binds the nation together. It is a reminder of the importance of staying rooted in tradition."
+  },
+  fishing: {
+    title: "🎣 Fishing",
+    definition:
+      "Fishing sustained coastal families for generations and shaped early life along the Arabian Gulf. It symbolizes patience, survival, and harmony with the sea. Fishing traditions were passed down with pride.",
+    connection:
+      "During National Day, fishing represents the UAE’s maritime heritage and the resourcefulness of its early people. It highlights the connection between land, sea, and identity."
+  },
+  tent: {
+    title: "🎪 Khaima (Traditional Tent)",
+    definition:
+      "The khaima was the center of Bedouin family life — a place of hospitality, warmth, and protection. It symbolizes community, generosity, and the strength of family bonds. Its design allowed comfort in harsh desert winds.",
+    connection:
+      "On National Day, the khaima reflects the UAE’s cultural values of unity, respect, and hospitality. It reminds students of the importance of community and togetherness."
+  },
+  yowla: {
+    title: "⚔️ Yowla (Traditional Emirati Dance)",
+    definition:
+      "Yowla is a proud Emirati performance traditionally involving rhythmic movement with swords or replica rifles. It symbolizes honor, unity, and the readiness to protect one’s people. Drums and chanting transform it into a powerful cultural display.",
+    connection:
+      "On UAE National Day, Yowla represents national pride and the unity of Emirati men standing shoulder‑to‑shoulder. It highlights bravery, heritage, and the strong identity that continues to shape the UAE."
+  },
+  falconhunt: {
+    title: "🏹🦅 Falcon Hunting",
+    definition:
+      "Falcon hunting is one of the oldest and most respected desert traditions. It required precision, patience, and trust between falconer and bird. It reflects leadership, discipline, and harmony with nature.",
+    connection:
+      "During National Day, falconry honors the deep roots of Emirati identity and the powerful relationship between people, animals, and the land."
+  }
+};
+
+function selectSymbol(key) {
+  current = key;
+  document.getElementById("home").style.display = "none";
+  document.getElementById("interaction").style.display = "block";
+  document.getElementById("symbolTitle").textContent = data[key].title;
+}
+
+function showResult() {
+  document.getElementById("interaction").style.display = "none";
+  document.getElementById("result").style.display = "block";
+  document.getElementById("resultTitle").textContent = data[current].title;
+  document.getElementById("definition").textContent = data[current].definition;
+  document.getElementById("connection").textContent = data[current].connection;
+}
+
+function goHome() {
+  document.getElementById("result").style.display = "none";
+  document.getElementById("home").style.display = "block";
+}
+</script>
+
+</body>
+</html>
