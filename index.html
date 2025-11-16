@@ -30,9 +30,17 @@ h1 {
 }
 .grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  grid-template-columns: repeat(5, 1fr);
   gap: 16px;
 }
+
+@media (max-width: 500px) {
+  .grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+
 .symbol-btn {
   background: #fff5e4;
   border: 2px solid #c8b38a;
